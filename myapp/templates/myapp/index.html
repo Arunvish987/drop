@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Dropdown</title>
+</head>
+<body>
+    <div class="container" style="margin-top:50px">
+        <h2 class="text-center">Dropdown</h2>
+        <br><br>
+        <form action="" method='post' id='indexForm' data-courses-url="{% url 'ajax-load' %}" data-courses-url1="{% url 'ajax-load-city' %}">
+            {% csrf_token %}
+            <label>Country</label>
+            <select name="country" id="country" class='form-control'>
+                <option value="">------Select Country------</option>
+                {% for i in countries %}
+                    <option value="{{ i.id }}">{{ i.name }}</option>
+                {% endfor %}    
+            </select>
+            <br>
+            <label>State</label>
+            <select name="states" id="states" class='form-control'>
+
+            </select>
+            <br>
+            <label>City</label>
+            <select name="cities" id="cities" class='form-control'>
+
+            </select>
+            <br>
+            <input type="submit" value='Submit' class='form-control btn btn-primary'>
+        </form>
+    
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script>
+    $("#country").change(function () {
+        var url = $("#indexForm").attr("data-courses-url");    //get the url of 'load'
+        var countryId = $(this).val();             //get the selected country id from HTML input
+
+        $.ajax({                                    //initalize an AJAX request
+            url: url,                               //set the url of the request
+            data: {
+                'country': countryId                //add the country id to get paramater
+            },
+            success: function (data) {              //'data' is the return of the 'load' view function
+                $("#states").html(data);            //replace the contents of the load input with data table 
+            }
+        });
+    })
+
+    $("#states").change(function () {
+        var url = $("#indexForm").attr("data-courses-url1");
+        var stateId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'state': stateId
+            },
+            success: function (data) {
+                $("#cities").html(data);
+            }
+        });
+    })
+
+</script>
+</body>
+</html>
